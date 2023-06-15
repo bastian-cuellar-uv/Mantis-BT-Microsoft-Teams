@@ -343,11 +343,11 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 		//curl_setopt($ch, CURLOPT_POSTFIELDS, $string);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
-        if ($result !== 'ok') {
+        if ($result !== 'ok' and $result !== '1') {
             trigger_error(curl_errno($ch) . ': ' . curl_error($ch), E_USER_ERROR);
             plugin_error('ERROR_CURL', E_USER_ERROR);
         }
