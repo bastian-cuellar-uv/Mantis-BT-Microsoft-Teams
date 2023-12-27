@@ -148,7 +148,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
     
         //PROBANDO NUEVO FORMATO JSON
-        $this->send_notification($this->get_webhook($project),$msg,$project,$mention_handler,$mention_handler_id, $tag_name);
+        $this->send_notification($this->get_webhook($project),$msg,$project,$mention_handler,$mention_handler_id, $tag_number);
     }
 
     function bug_report($event, $bug, $bug_id) {
