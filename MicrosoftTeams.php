@@ -139,10 +139,8 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_reporter = ucwords(str_replace("."," ",$reporter));
         $mention_reporter_id = $reporter . "@uv.cl";
         $tags = custom_field_get_linked_ids( $bug->project_id );
-        foreach ( $tags as $t_id ) {
-            $t_def = custom_field_get_definition( $t_id );
-            $tag_name = $t_def['name'];
-        }
+        $tag_number=count($tags);
+        
 
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $url, $summary
