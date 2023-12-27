@@ -139,6 +139,10 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_reporter = ucwords(str_replace("."," ",$reporter));
         $mention_reporter_id = $reporter . "@uv.cl";
         $tags = custom_field_get_linked_ids( $bug->project_id );
+        foreach ( $tags as $t_id ) {
+            $t_def = custom_field_get_definition( $t_id );
+            $tag_name = $t_def['name'];
+        }
 
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $url, $summary
@@ -146,7 +150,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
     
         //PROBANDO NUEVO FORMATO JSON
-        $this->send_notification($this->get_webhook($project),$msg,$project,$mention_handler,$mention_handler_id, $tags);
+        $this->send_notification($this->get_webhook($project),$msg,$project,$mention_handler,$mention_handler_id, $tag_name);
     }
 
     function bug_report($event, $bug, $bug_id) {
@@ -407,6 +411,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
 
     function send_notification($url, $text, $project,$test_name,$test_id, $tags) 
     {
+        $tag_format = $tags[0];
         $data = array(
             'type' => 'message',
             'attachments' => array(
@@ -422,7 +427,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
                                 "text"=> "{$project}"),
                             array(
                                 'type' => 'TextBlock',
-                                'text' => "{$text} asignado a <at>{$test_name}</at> con etiqueta {$tags}"
+                                'text' => "{$text} asignado a <at>{$test_name}</at> con etiqueta {$tagformat}"
                             )
                         ),
                         '$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
