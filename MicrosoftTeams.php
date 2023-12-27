@@ -409,7 +409,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
 
     function send_notification($url, $text, $project,$test_name,$test_id, $tags) 
     {
-        $tag_format = $tags[0];
+        
         $data = array(
             'type' => 'message',
             'attachments' => array(
@@ -425,7 +425,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
                                 "text"=> "{$project}"),
                             array(
                                 'type' => 'TextBlock',
-                                'text' => "{$text} asignado a <at>{$test_name}</at> con etiqueta {$tagformat}"
+                                'text' => "{$text} asignado a <at>{$test_name}</at> con etiqueta {$tags}"
                             )
                         ),
                         '$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
