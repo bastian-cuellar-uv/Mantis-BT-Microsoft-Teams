@@ -129,11 +129,23 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = bug_get_field( $bug_id, 'description' );
-        $reporter = $this->get_user_name(auth_get_current_user_id());
+        $reporter = $this->new_get_user_name(auth_get_current_user_id());
+
+
+         //UPDATE
+        $handler = $this->new_get_user_name($bug->handler_id);
+        $mention_handler = ucwords(str_replace(".", " ", $handler));
+        $mention_handler_id = $handler . "@uv.cl";
+        $mention_reporter = ucwords(str_replace("."," ",$reporter));
+        $mention_reporter_id = $reporter . "@uv.cl";
+
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
-            $project, $reporter, $url, $summary
+            $project, $mention_reporter, $url, $summary
         );
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
+    
+        //PROBANDO NUEVO FORMATO JSON
+        $this->send_notification($this->get_webhook($project),$msg, $mention_reporter_id, $mention_reporter,$project,$mention_handler,$mention_handler_id);
     }
 
     function bug_report($event, $bug, $bug_id) {
@@ -164,10 +176,21 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
             $this->skip_event($event);
 
         $project = project_get_name($bug->project_id);
-        $reporter = $this->get_user_name(auth_get_current_user_id());
+        $reporter = $this->new_get_user_name(auth_get_current_user_id());
         $summary = $this->format_summary($bug);
-        $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $reporter, $summary);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
+
+        //UPDATE
+        $handler = $this->new_get_user_name($bug->handler_id);
+        $mention_handler = ucwords(str_replace(".", " ", $handler));
+        $mention_handler_id = $handler . "@uv.cl";
+        $mention_reporter = ucwords(str_replace("."," ",$reporter));
+        $mention_reporter_id = $reporter . "@uv.cl";
+
+        $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $mention_reporter, $summary);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
+        
+        //PROBANDO NUEVO FORMATO JSON
+        $this->send_notification($this->get_webhook($project),$msg, $mention_reporter_id, $mention_reporter, $project,$mention_handler,$mention_handler_id);
     }
 
     function bugnote_add_edit($event, $bug_id, $bugnote_id) {
@@ -183,12 +206,22 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $url = string_get_bugnote_view_url_with_fqdn($bug_id, $bugnote_id);
         $project = project_get_name($bug->project_id);
         $summary = bugnote_get_text($bugnote_id);
-        $reporter = $this->get_user_name(auth_get_current_user_id());
+        $reporter = $this->new_get_user_name(auth_get_current_user_id());
         $note = bugnote_get_text($bugnote_id);
+
+        //UPDATE
+        $handler = $this->new_get_user_name($bug->handler_id);
+        $mention_handler = ucwords(str_replace(".", " ", $handler));
+        $mention_handler_id = $handler . "@uv.cl";
+        $mention_reporter = ucwords(str_replace("."," ",$reporter));
+        $mention_reporter_id = $reporter . "@uv.cl";
+
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
-            $project, $reporter, $url, $summary
+            $project, $mention_reporter,$url, $summary
         );
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_MicrosoftTeams($note)),$project);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_MicrosoftTeams($note)),$project);
+        //PROBANDO NUEVO FORMATO JSON
+        $this->send_notification($this->get_webhook($project),$msg, $mention_reporter_id, $mention_reporter, $project,$mention_handler,$mention_handler_id);
     }
 
     function get_text_attachment($text) {
@@ -211,9 +244,20 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $project = project_get_name($bug->project_id);
         $url = string_get_bug_view_url_with_fqdn($bug_id);
         $summary = $this->format_summary($bug);
-        $reporter = $this->get_user_name(auth_get_current_user_id());
-        $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $reporter, $url, $summary);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
+        $reporter = $this->new_get_user_name(auth_get_current_user_id());
+
+        //UPDATE
+        $handler = $this->new_get_user_name($bug->handler_id);
+        $mention_handler = ucwords(str_replace(".", " ", $handler));
+        $mention_handler_id = $handler . "@uv.cl";
+        $mention_reporter = ucwords(str_replace(".", " ", $reporter));
+        $mention_reporter_id = $reporter . "@uv.cl";
+
+        $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $mention_reporter,$url, $summary);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
+
+        //PROBANDO NUEVO FORMATO JSON
+        $this->send_notification($this->get_webhook($project),$msg, $mention_reporter_id, $mention_reporter, $project,$mention_handler,$mention_handler_id);
     }
 
     function format_summary($bug) {
@@ -251,7 +295,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
             'id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->id), $bug->id); },
             'project_id' => function($bug) { return project_get_name($bug->project_id); },
             'reporter_id' => function($bug) { return $this->get_user_name($bug->reporter_id); },
-            'handler_id' => function($bug) { return empty($bug->handler_id) ? plugin_lang_get('no_user') : $this->get_user_name($bug->handler_id); },
+            'handler_id' => function($bug) { return $this->get_user_name($bug->handler_id); },
             'duplicate_id' => function($bug) { return sprintf('<%s|%s>', string_get_bug_view_url_with_fqdn($bug->duplicate_id), $bug->duplicate_id); },
             'priority' => function($bug) { return get_enum_element( 'priority', $bug->priority ); },
             'severity' => function($bug) { return get_enum_element( 'severity', $bug->severity ); },
@@ -354,6 +398,71 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         curl_close($ch);
     }
 
+    function send_notification($url, $text, $user_id, $user_name,$project,$test_name,$test_id) 
+    {
+        $data = array(
+            'type' => 'message',
+            'attachments' => array(
+                array(
+                    'contentType' => 'application/vnd.microsoft.card.adaptive',
+                    'content' => array(
+                        'type' => 'AdaptiveCard',
+                        'body' => array(
+                            array(
+                                "type"=> "TextBlock",
+                                "size"=> "Large",
+                                "weight"=> "bolder",
+                                "text"=> "{$project}"),
+                            array(
+                                'type' => 'TextBlock',
+                                'text' => "{$text} asignado a <at>{$test_name}</at>"
+                            )
+                        ),
+                        '$schema' => 'http://adaptivecards.io/schemas/adaptive-card.json',
+                        'version' => '1.0',
+                        'msteams' => array(
+                            'width' => 'Full',
+                            'entities' => array(
+                                array(
+                                    'type' => 'mention',
+                                    'text' => "<at>{$user_name}</at>",
+                                    'mentioned' => array(
+                                        'id' => $user_id,
+                                        'name' => $user_name
+                                    )
+                                    ),
+                                array(
+                                    'type' => 'mention',
+                                    'text' => "<at>{$test_name}</at>",
+                                    'mentioned' => array(
+                                        'id' => $test_id,
+                                        'name' => $test_name
+                                    ) 
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    );
+    
+        $options = array(
+            'http' => array(
+                'header' => "Content-Type: application/json\r\n",
+                'method' => 'POST',
+                'content' => json_encode($data),
+                'ignore_errors' => true
+            )
+        );
+    
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+    
+        /* if ($result !== 'ok') {
+            
+        } */
+    }
+
     function bbcode_to_MicrosoftTeams($bbtext){
         $bbtags = array(
             '[b]' => '*','[/b]' => '* ',
@@ -408,5 +517,13 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $usernames = plugin_config_get('usernames');
         $username = array_key_exists($username, $usernames) ? $usernames[$username] : $username;
 		return '@' . $username;
+    }
+
+    function new_get_user_name($user_id) {
+    	$user = user_get_row($user_id);
+    	$username = $user['username'];
+        $usernames = plugin_config_get('usernames');
+        $username = array_key_exists($username, $usernames) ? $usernames[$username] : $username;
+		return $username;
     }
 }
