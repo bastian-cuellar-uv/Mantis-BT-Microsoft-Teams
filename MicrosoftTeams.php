@@ -143,10 +143,10 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $url, $summary
         );
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
     
         //PROBANDO NUEVO FORMATO JSON
-        //$this->send_notification($this->get_webhook($project),$msg,$project,$mention_handler,$mention_handler_id);
+        $this->send_notification($this->get_webhook($project),$msg,$project,$mention_handler,$mention_handler_id);
     }
 
     function bug_report($event, $bug, $bug_id) {
@@ -188,10 +188,10 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_reporter_id = $reporter . "@uv.cl";
 
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $mention_reporter, $summary);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
         
         //PROBANDO NUEVO FORMATO JSON
-        //$this->send_notification($this->get_webhook($project),$msg,  $project,$mention_handler,$mention_handler_id);
+        $this->send_notification($this->get_webhook($project),$msg,  $project,$mention_handler,$mention_handler_id);
     }
 
     function bugnote_add_edit($event, $bug_id, $bugnote_id) {
@@ -222,10 +222,10 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         );
 
         
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_MicrosoftTeams($note)),$project);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_text_attachment($this->bbcode_to_MicrosoftTeams($note)),$project);
         
         //PROBANDO NUEVO FORMATO JSON
-        //$this->send_notification($this->get_webhook($project),$msg, $project,$mention_handler,$mention_handler_id);
+        $this->send_notification($this->get_webhook($project),$msg, $project,$mention_handler,$mention_handler_id);
     }
 
     function get_text_attachment($text) {
@@ -258,10 +258,10 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_reporter_id = $reporter . "@uv.cl";
 
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $mention_reporter,$url, $summary);
-        $this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
+        //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
 
         //PROBANDO NUEVO FORMATO JSON
-        //$this->send_notification($this->get_webhook($project),$msg,  $project,$mention_handler,$mention_handler_id);
+        $this->send_notification($this->get_webhook($project),$msg,  $project,$mention_handler,$mention_handler_id);
     }
 
     function format_summary($bug) {
