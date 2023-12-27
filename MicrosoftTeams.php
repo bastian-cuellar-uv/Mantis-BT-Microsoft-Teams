@@ -141,7 +141,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $tags = custom_field_get_linked_ids( $bug->project_id );
 
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
-            $project, $mention_reporter, $url, $summary
+            $project, $url, $summary
         );
         //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), $this->get_attachment($bug),$project);
     
