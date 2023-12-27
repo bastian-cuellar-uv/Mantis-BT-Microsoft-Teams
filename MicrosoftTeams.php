@@ -138,7 +138,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_handler_id = $handler . "@uv.cl";
         $mention_reporter = ucwords(str_replace("."," ",$reporter));
         $mention_reporter_id = $reporter . "@uv.cl";
-        $tags = category_full_name( $bug->category_id, false );
+        $tags = sponsorship_format_amount( $bug->sponsorship_total );
 
         $msg = sprintf(plugin_lang_get($event === 'EVENT_REPORT_BUG' ? 'bug_created' : 'bug_updated'),
             $project, $url, $summary
@@ -186,7 +186,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_handler_id = $handler . "@uv.cl";
         $mention_reporter = ucwords(str_replace("."," ",$reporter));
         $mention_reporter_id = $reporter . "@uv.cl";
-        $tags = category_full_name( $bug->category_id, false );
+        $tags = sponsorship_format_amount( $bug->sponsorship_total );
 
         $msg = sprintf(plugin_lang_get('bug_deleted'), $project, $mention_reporter, $summary);
         //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
@@ -217,7 +217,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_handler_id = $handler . "@uv.cl";
         $mention_reporter = ucwords(str_replace("."," ",$reporter));
         $mention_reporter_id = $reporter . "@uv.cl";
-        $tags = category_full_name( $bug->category_id, false );
+        $tags = sponsorship_format_amount( $bug->sponsorship_total );
 
         $msg = sprintf(plugin_lang_get($event === 'EVENT_BUGNOTE_ADD' ? 'bugnote_created' : 'bugnote_updated'),
             $project, $mention_reporter,$url, $summary
@@ -258,7 +258,7 @@ class MicrosoftTeamsPlugin extends MantisPlugin {
         $mention_handler_id = $handler . "@uv.cl";
         $mention_reporter = ucwords(str_replace(".", " ", $reporter));
         $mention_reporter_id = $reporter . "@uv.cl";
-        $tags = category_full_name( $bug->category_id, false );
+        $tags = sponsorship_format_amount( $bug->sponsorship_total );
 
         $msg = sprintf(plugin_lang_get('bugnote_deleted'), $project, $mention_reporter,$url, $summary);
         //$this->notify($msg, $this->get_webhook($project), $this->get_channel($project), false, $project);
